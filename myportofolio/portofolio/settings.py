@@ -78,7 +78,18 @@ WSGI_APPLICATION = 'portofolio.wsgi.application'
 
 
 # Database configuration
-if PRODUCTION:
+POSTGRES_ENVIRONMENT_VARIABLES = (
+    'DB_NAME',
+    'DB_USER',
+    'DB_PASSWORD',
+    'DB_HOST',
+    'DB_PORT',
+)
+USE_POSTGRES = PRODUCTION and all(
+    os.getenv(variable) for variable in POSTGRES_ENVIRONMENT_VARIABLES
+)
+
+if USE_POSTGRES:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
