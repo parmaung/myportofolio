@@ -1,1 +1,1 @@
-web: gunicorn --chdir myportofolio portofolio.wsgi:application
+web: gunicorn portofolio.wsgi
