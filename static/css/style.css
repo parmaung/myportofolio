@@ -7,7 +7,7 @@
 :root {
     --ink: #4e0202;
     --paper: #cecabf;
-    --accent: #d95d39;
+    --accent: #5a2312;
     --accent-dark: #a8442a;
     --line: #e3d9c9;
     --text-muted: #6b6459;
@@ -32,6 +32,7 @@ h1, .brand {
 }
 
 .site-header {
+    background-color: var(--ink);
     border-bottom: 1px solid var(--line);
 }
 
@@ -40,6 +41,10 @@ h1, .brand {
     justify-content: space-between;
     align-items: center;
     padding: 1.25rem 1.5rem;
+}
+
+.site-header .brand {
+    color: var(--paper);
 }
 
 .brand {
