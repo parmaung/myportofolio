@@ -1,14 +1,14 @@
-﻿[
-{
-  "model": "main.experience",
-  "pk": "23e6d177-3ecd-4b4f-9941-5c5c3269ab24",
-  "fields": {
-    "title": "Game Developer Bootcamp",
-    "description": "Mempelajari 3d Game Development dengan Unity selama 2 minggu.",
-    "category": "Apprenticeship",
-    "thumbnail": null,
-    "started_at": "2026-09-09T15:18:07.287Z",
-    "ended_at": null
-  }
-}
-]
+[
+{
+  "model": "main.experience",
+  "pk": "23e6d177-3ecd-4b4f-9941-5c5c3269ab24",
+  "fields": {
+    "title": "Game Developer Bootcamp",
+    "description": "Mempelajari 3d Game Development dengan Unity selama 2 minggu.",
+    "category": "Apprenticeship",
+    "thumbnail": null,
+    "started_at": "2026-09-09T15:18:07.287Z",
+    "ended_at": null
+  }
+}
+]
