@@ -15,6 +15,7 @@
             <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
             <nav>
                 <a href="{% url 'main:show_main' %}">Profile</a>
+                <a href="{% url 'main:show_projects' %}">Projects</a>
                 <a href="{% url 'main:show_experience' %}">Experience</a>
             </nav>
         </div>
@@ -95,6 +96,15 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <section class="projects-teaser" id="projects-teaser">
+            <div class="container projects-teaser-inner">
+                <p class="section-kicker">Selected work</p>
+                <h2>Want to see what I've built?</h2>
+                <p class="bio">Check out the full list of my projects, including the tech stack used for each one.</p>
+                <a href="{% url 'main:show_projects' %}" class="social-link">View Projects</a>
             </div>
         </section>
     </main>

@@ -299,3 +299,74 @@ h1, .brand {
     font-size: 0.85rem;
     font-weight: 600;
 }
+
+/* Projects page */
+.project-section {
+    padding: 4rem 0;
+    border-top: 1px solid var(--line);
+}
+
+.project-section h1 {
+    margin: 0.4rem 0 1.5rem;
+    font-size: 2rem;
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+}
+
+.project-card {
+    padding: 1.25rem;
+    background-color: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+}
+
+.project-card h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+}
+
+.project-description {
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.project-tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.project-link {
+    margin-top: auto;
+    align-self: flex-start;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--paper);
+    background-color: var(--ink);
+    border-radius: var(--radius);
+    padding: 0.5rem 1.1rem;
+    transition: background-color 0.2s ease;
+}
+
+.project-link:hover {
+    background-color: var(--accent);
+}
+
+/* Projects teaser on main page */
+.projects-teaser {
+    padding: 3rem 0 5rem;
+    border-top: 1px solid var(--line);
+}
+
+.projects-teaser-inner h2 {
+    margin: 0.4rem 0 1rem;
+    font-size: 1.75rem;
+}
