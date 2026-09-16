@@ -1,35 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects - {{ name }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-    <header class="site-header">
-        <div class="container">
-            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
-            <nav>
-                <a href="{% url 'main:show_main' %}">Profile</a>
-                <a href="{% url 'main:show_projects' %}">Projects</a>
-                <a href="{% url 'main:show_experience' %}">Experience</a>
-            </nav>
-        </div>
-    </header>
+{% extends "base.html" %}
 
+{% block meta %}
+    <title>Projects - {{ name }}</title>
+{% endblock meta %}
+
+{% block content %}
     <main>
-        <section class="project-section" id="projects">
+        <section class="experience-section" id="projects">
             <div class="container">
                 <p class="section-kicker">Things I've built</p>
-                <h1>Projects</h1>
 
-                <div class="project-grid">
+                <div class="project-header">
+                    <h1>Projects</h1>
+                    <a href="{% url 'main:create_project' %}" class="button project-add-button">
+                        <span aria-hidden="true">+</span>
+                        Tambah Proyek
+                    </a>
+                </div>
+
+                <form method="get"
+                      action="{% url 'main:show_projects' %}"
+                      class="project-search">
+                    <input type="search"
+                           name="title"
+                           value="{{ title_query }}"
+                           placeholder="Cari berdasarkan nama proyek"
+                           class="project-search__input"
+                           aria-label="Cari berdasarkan nama proyek">
+                    <button type="submit" class="button">Cari</button>
+                </form>
+
+                <div class="experience-grid project-grid">
                     {% for project in project_list %}
-                        <article class="project-card">
+                        <article class="experience-card">
+                            {% if project.thumbnail %}
+                                <img src="{{ project.thumbnail }}"
+                                     alt="Gambar {{ project.title }}"
+                                     class="project-image">
+                            {% endif %}
                             <h2>{{ project.title }}</h2>
                             <p class="project-description">
                                 {{ project.description }}
@@ -41,24 +49,24 @@
                                 {% endfor %}
                             </div>
 
-                            {% if project.link %}
-                                <a class="project-link" href="{{ project.link }}" target="_blank" rel="noopener noreferrer">View Project</a>
-                            {% endif %}
+                            <div class="project-card-actions">
+                                <div class="project-actions">
+                                    {% if project.link %}
+                                        <a class="button" href="{{ project.link }}" target="_blank" rel="noopener noreferrer">View Project</a>
+                                    {% endif %}
+                                    {% include "components/project_delete_modal.html" with project=project %}
+                                </div>
+                            </div>
                         </article>
                     {% empty %}
-                        <p class="empty-state">
-                            No projects have been added yet.
-                        </p>
+                        {% if title_query %}
+                            <p class="empty-state">Tidak ada proyek dengan nama tersebut.</p>
+                        {% else %}
+                            <p class="empty-state">No projects have been added yet.</p>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
         </section>
     </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 {{ name }}. Fakultas Sistem Informasi, Universitas Indonesia.</p>
-        </div>
-    </footer>
-</body>
-</html>
+{% endblock content %}
