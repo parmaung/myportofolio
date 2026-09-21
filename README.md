@@ -25,3 +25,22 @@ A3:
 I am learning to make my web more dynamic and fluid with more interactive elements. Such as carousels, slides, more animations for hook purposes. To the best of my knowledge im still limited to static elements where the only interaction is hover buttons, Im looking forward to learn more.
 
 ////////////////////////////////////////
+
+Reflective Question for Assignment 03:
+
+Q1:
+Explain why we use Django’s ModelForm instead of creating HTML forms manually. Additionally, explain why we are required to add {% csrf_token %} to these forms!
+A1:
+Its much more practical i guess??? Since hard-coding the HTML is much more of a repetitive process, and the data from Django is much more validated.
+
+Q2:
+In Tutorial 03, we discussed JSON and XML data formats. Why is JSON preferred in modern web application development compared to XML?
+A1:
+I need some google searchfor this and actually comparing it to my knowledge. And as far as I understand, JSON is fairly much simpler to use.
+
+Q3:
+Explain the flow that occurs when you use a view function to return your portfolio data in JSON format. Why do we need to perform the serialization process on Django models before returning the data?
+A3:
+The client sends a request to views.py, and the database returns the response. (still trying to understand to be honest)
+
+////////////////////////////////////////
