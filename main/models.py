@@ -51,3 +51,45 @@ class Project(models.Model):
     @property
     def tech_stack_list(self):
         return [tech.strip() for tech in self.tech_stack.split(",") if tech.strip()]
+
+
+class Education(models.Model):
+    LEVEL_CHOICES = [
+        ("elementary", "Elementary School"),
+        ("junior_high", "Junior High School"),
+        ("senior_high", "Senior High School"),
+        ("diploma", "Diploma"),
+        ("bachelor", "Bachelor's Degree"),
+        ("master", "Master's Degree"),
+        ("doctorate", "Doctorate"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    institution_name = models.CharField(max_length=255)
+    level = models.CharField(
+        max_length=20,
+        choices=LEVEL_CHOICES,
+        default="bachelor",
+    )
+    field_of_study = models.CharField(max_length=255, blank=True, null=True)
+    gpa = models.DecimalField(
+        max_digits=4,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        help_text="e.g. 3.75",
+    )
+    start_year = models.PositiveIntegerField()
+    end_year = models.PositiveIntegerField(blank=True, null=True)
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-start_year"]
+
+    def __str__(self):
+        return f"{self.institution_name} - {self.get_level_display()}"
+
+    @property
+    def is_ongoing(self):
+        return self.end_year is None

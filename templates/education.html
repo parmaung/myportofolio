@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block meta %}
+    <title>Education - {{ name }}</title>
+{% endblock meta %}
+
+{% block content %}
+    <main>
+        <section class="experience-section" id="education">
+            <div class="container">
+                <div class="project-header">
+                    <div>
+                        <p class="section-kicker">Academic background</p>
+                        <h1>Education</h1>
+                    </div>
+                    <a href="{% url 'main:create_education' %}" class="button project-add-button">
+                        <span aria-hidden="true">+</span>
+                        Tambah Pendidikan
+                    </a>
+                </div>
+
+                <div class="experience-grid">
+                    {% for education in education_list %}
+                        <article class="experience-card">
+                            <span class="experience-category">
+                                {{ education.get_level_display }}
+                            </span>
+                            <h2>{{ education.institution_name }}</h2>
+                            {% if education.field_of_study %}
+                                <p class="project-description">{{ education.field_of_study }}</p>
+                            {% endif %}
+                            {% if education.description %}
+                                <p class="experience-description">
+                                    {{ education.description }}
+                                </p>
+                            {% endif %}
+
+                            <div class="project-tech-tags">
+                                <span class="skill-tag">
+                                    {{ education.start_year }}
+                                    &ndash;
+                                    {% if education.end_year %}{{ education.end_year }}{% else %}Present{% endif %}
+                                </span>
+                                {% if education.gpa %}
+                                    <span class="skill-tag">GPA {{ education.gpa }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="project-card-actions">
+                                <div class="project-actions">
+                                    {% if education.is_ongoing %}
+                                        <p class="experience-status">Ongoing</p>
+                                    {% else %}
+                                        <p class="experience-status">Completed</p>
+                                    {% endif %}
+                                    <a class="button"
+                                       href="{% url 'main:update_education' education.id %}">Edit</a>
+                                    {% include "components/education_delete_modal.html" with education=education %}
+                                </div>
+                            </div>
+                        </article>
+                    {% empty %}
+                        <p class="empty-state">
+                            No education history has been added yet.
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock content %}
