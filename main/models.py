@@ -1,5 +1,6 @@
 import uuid
 
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -44,6 +45,10 @@ class Project(models.Model):
     link = models.URLField(blank=True, null=True)
     thumbnail = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    # Satu proyek bisa di-star banyak user, satu user bisa men-star banyak proyek
+    starred_by = models.ManyToManyField(
+        User, related_name="starred_projects", blank=True
+    )
 
     def __str__(self):
         return self.title
