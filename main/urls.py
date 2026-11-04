@@ -12,6 +12,10 @@ from main.views import (
     show_main,
     show_projects,
     update_education,
+    get_skills_json,
+    show_skills,
+    create_skills,
+    delete_skills,
 )
 
 app_name = "main"
@@ -20,6 +24,7 @@ urlpatterns = [
     path("", show_main, name="show_main"),
     path("experience/", show_experience, name="show_experience"),
     path("projects/", show_projects, name="show_projects"),
+    path("skills/", show_skills, name="show_skills"),
     path("projects/add/", create_project, name="create_project"),
     path("projects/<uuid:project_id>/delete/", delete_project, name="delete_project"),
     path("api/projects/", get_projects_json, name="get_projects_json"),
@@ -36,4 +41,7 @@ urlpatterns = [
         name="delete_education",
     ),
     path("api/education/", get_education_json, name="get_education_json"),
+    path("skills/add/", create_skills, name="create_skills"),
+    path("skills/<uuid:skills_id>/delete/", delete_skills, name="delete_skills"),
+    path("api/skills/", get_skills_json, name="get_skills_json"),
 ]

@@ -1,6 +1,6 @@
 from django.forms import ModelForm, NumberInput, Select, TextInput, Textarea, URLInput
 
-from main.models import Education, Project
+from main.models import Education, Project, Skills
 
 
 class ProjectForm(ModelForm):
@@ -113,4 +113,28 @@ class EducationForm(ModelForm):
                     "rows": 3,
                 }
             ),
+        }
+
+class SkillsForm(ModelForm):
+    class Meta:
+        model = Skills
+        fields = [
+            "skill_name",
+            "skill_choice",
+            "mastery",
+        ]
+        labels = {
+            "skill_name" : "Nama Skill",
+            "skill_choice" : "Kategori Skill",
+            "mastery" : "Mastery Skill",
+        }
+        widgets = {
+            "skill_name": TextInput(
+                attrs={
+                    "placeholder": "Nama Skill kamu",
+                    "maxlength": 100,
+                }
+            ),
+            "skill_choice": Select(),
+            "mastery": Select(),
         }

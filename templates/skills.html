@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block meta %}
+    <title>Skills - {{ name }}</title>
+{% endblock meta %}
+
+{% block content %}
+    <main>
+        <section class="experience-section" id="skills">
+            <div class="container">
+                <div class="project-header">
+                    <div>
+                        <p class="section-kicker">Technical Proficiencies</p>
+                        <h1>Skills</h1>
+                    </div>
+                    <a href="{% url 'main:create_skills' %}" class="button project-add-button">
+                        <span aria-hidden="true">+</span>
+                        Tambah Skill
+                    </a>
+                </div>
+
+                <div class="experience-grid">
+                    {% for skill in skills_list %}
+                        <article class="experience-card">
+                            <span class="experience-category">
+                                {{ skill.get_skill_choice_display }}
+                            </span>
+                            
+                            <h2>{{ skill.skill_name }}</h2>
+
+                            <div class="project-tech-tags">
+                                <span class="skill-tag">
+                                    {{ skill.get_mastery_display }}
+                                </span>
+                            </div>
+
+                            <div class="project-card-actions">
+                                <div class="project-actions">
+                                    {% include "components/skill_delete_modal.html" with skill=skill %}
+                                </div>
+                            </div>
+                        </article>
+                    {% empty %}
+                        <p class="empty-state">
+                            Belum ada skill yang ditambahkan.
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock content %}

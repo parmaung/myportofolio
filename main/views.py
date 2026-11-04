@@ -3,8 +3,8 @@ from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from main.forms import EducationForm, ProjectForm
-from main.models import Education, Experience, Project
+from main.forms import EducationForm, ProjectForm, SkillsForm
+from main.models import Education, Experience, Project, Skills
 
 PORTFOLIO_OWNER_NAME = "Rafif Ananta Marpaung"
 
@@ -142,3 +142,47 @@ def delete_education(request, education_id):
         messages.success(request, "Riwayat pendidikan berhasil dihapus!")
         return redirect("main:show_education")
     return redirect("main:show_education")
+
+#------- Skills Section --------------
+
+def get_skills_json(request):
+    skills_entries = Skills.objects.all()
+    skills_json = serializers.serialize("json", skills_entries)
+    return HttpResponse(skills_json, content_type="application/json")
+
+
+def show_skills(request):
+    json_response = get_skills_json(request)
+    skills_entries = serializers.deserialize(
+        "json",
+        json_response.content.decode("utf-8"),
+    )
+    skills_list = [entry.object for entry in skills_entries]
+
+    context = {
+        "name": PORTFOLIO_OWNER_NAME,
+        "skills_list": skills_list,
+    }
+    return render(request, "skills.html", context)
+
+def create_skills(request):
+    form = SkillsForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Skill berhasil ditambahkan!")
+        return redirect("main:show_skills")
+
+    context = {
+        "name": PORTFOLIO_OWNER_NAME,
+        "form": form,
+        "is_edit": False,
+    }
+    return render(request, "skills_form.html", context)
+
+def delete_skills(request, skills_id):
+    skill = get_object_or_404(Skills, id=skills_id)
+    if request.method == "POST":
+        skill.delete()
+        messages.success(request, "Skill berhasil dihapus.")
+        return redirect('main:show_skills')
+    return redirect('main:show_skills')

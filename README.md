@@ -31,7 +31,7 @@ Reflective Question for Assignment 03:
 Q1:
 Explain why we use Django’s ModelForm instead of creating HTML forms manually. Additionally, explain why we are required to add {% csrf_token %} to these forms!
 A1:
-Its much more practical i guess??? Since hard-coding the HTML is much more of a repetitive process, and the data from Django is much more validated.
+Its much more practical i guess. Since hard-coding the HTML is much more of a repetitive process, and the data from Django is much more validated.
 
 Q2:
 In Tutorial 03, we discussed JSON and XML data formats. Why is JSON preferred in modern web application development compared to XML?

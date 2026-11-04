@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block meta %}
+    <title>Tambah Skill - {{ name }}</title>
+{% endblock meta %}
+
+{% block content %}
+    <main>
+        <section class="experience-section">
+            <div class="container">
+                <div class="project-header">
+                    <div>
+                        <p class="section-kicker">Skill Management</p>
+                        <h1>Tambah Skill Baru</h1>
+                    </div>
+                </div>
+
+                <div class="experience-card" style="max-width: 500px; margin: 0 auto;">
+                    <form method="POST" action="{% url 'main:create_skills' %}" class="project-form">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            {{ form.as_p }}
+                        </div>
+
+                        <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+                            <button type="submit" class="button">Simpan Skill</button>
+                            <a href="{% url 'main:show_skills' %}" class="button button-secondary">Batal</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock content %}

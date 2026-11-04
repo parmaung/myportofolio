@@ -1,0 +1,48 @@
+<!-- Trigger Button -->
+<button type="button" 
+        class="button button-danger" 
+        popovertarget="delete-modal-{{ skill.id }}">
+    Hapus
+</button>
+
+<!-- Popover Modal Overlay -->
+<div id="delete-modal-{{ skill.id }}" 
+     popover 
+     class="project-delete-modal">
+    
+    <!-- Backdrop overlay -->
+    <button type="button" 
+            class="project-delete-modal__backdrop" 
+            popovertarget="delete-modal-{{ skill.id }}" 
+            popovertargetaction="hide" 
+            tabindex="-1">
+    </button>
+
+    <!-- Modal Box Content -->
+    <div class="project-delete-modal__content">
+        <button type="button" 
+                class="project-delete-modal__close" 
+                popovertarget="delete-modal-{{ skill.id }}" 
+                popovertargetaction="hide" 
+                aria-label="Close modal">
+            &times;
+        </button>
+
+        <h2>Konfirmasi Hapus</h2>
+        <p>Apakah Anda yakin ingin menghapus skill <strong>{{ skill.skill_name }}</strong>? Tindakan ini tidak dapat dibatalkan.</p>
+
+        <div class="project-delete-modal__actions">
+            <button type="button" 
+                    class="button button-secondary" 
+                    popovertarget="delete-modal-{{ skill.id }}" 
+                    popovertargetaction="hide">
+                Batal
+            </button>
+            
+            <form method="POST" action="{% url 'main:delete_skills' skill.id %}">
+                {% csrf_token %}
+                <button type="submit" class="button button-danger">Ya, Hapus</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -93,3 +93,33 @@ class Education(models.Model):
     @property
     def is_ongoing(self):
         return self.end_year is None
+
+class Skills(models.Model):
+    SKILL_CHOICES = [
+        ("tool", "Tool Proficiency"),
+        ("technical", "Techincal Proficiency"),
+        ("interpersonal", "Interpersonal Skills"),
+    ]
+    MASTERY_CHOICES = [
+        ("learning", "Still Learning"),
+        ("beginner", "Beginner"),
+        ("intermediate", "Intermediate"),
+    ]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    skill_name = models.CharField(max_length=255)
+    skill_choice = models.CharField(
+        max_length=100,
+        choices= SKILL_CHOICES,
+    )
+    mastery = models.CharField(
+        max_length=100,
+        choices= MASTERY_CHOICES,
+    )
+    
+
+    def __str__(self):
+        return self.skill_name
+
+    @property
+    def tech_stack_list(self):
+        return [tech.strip() for tech in self.tech_stack.split(",") if tech.strip()]
