@@ -20,10 +20,9 @@
                     {% endif %}
                 </div>
 
-                <form method="get"
-                      action="{% url 'main:show_projects' %}"
-                      class="project-search">
+                <form id="project-search-form" class="project-search">
                     <input type="search"
+                           id="search-input"
                            name="title"
                            value="{{ title_query }}"
                            placeholder="Cari berdasarkan nama proyek"
@@ -32,46 +31,160 @@
                     <button type="submit" class="button">Cari</button>
                 </form>
 
-                <div class="experience-grid project-grid">
-                    {% for project in project_list %}
-                        <article class="experience-card">
-                            {% if project.thumbnail %}
-                                <img src="{{ project.thumbnail }}"
-                                     alt="Gambar {{ project.title }}"
-                                     class="project-image">
-                            {% endif %}
-                            <h2>{{ project.title }}</h2>
-                            <p class="project-description">
-                                {{ project.description }}
-                            </p>
-
-                            <div class="project-tech-tags">
-                                {% for tech in project.tech_stack_list %}
-                                    <span class="skill-tag">{{ tech }}</span>
-                                {% endfor %}
-                            </div>
-
-                            <div class="project-card-actions">
-                                <div class="project-actions">
-                                    {% if project.link %}
-                                        <a class="button" href="{{ project.link }}" target="_blank" rel="noopener noreferrer">View Project</a>
-                                    {% endif %}
-                                    {% include "components/project_star.html" with project=project %}
-                                    {% if user.is_superuser %}
-                                        {% include "components/project_delete_modal.html" with project=project %}
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </article>
-                    {% empty %}
-                        {% if title_query %}
-                            <p class="empty-state">Tidak ada proyek dengan nama tersebut.</p>
-                        {% else %}
-                            <p class="empty-state">No projects have been added yet.</p>
-                        {% endif %}
-                    {% endfor %}
+                <!-- Loading State -->
+                <div id="loading" class="empty-state hide">
+                    <p>Memuat proyek...</p>
                 </div>
+
+                <!-- Error State -->
+                <div id="error" class="empty-state hide">
+                    <p>Gagal memuat data proyek. Silakan coba lagi.</p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty" class="empty-state hide">
+                    <p>Belum ada proyek yang ditambahkan atau ditemukan.</p>
+                </div>
+
+                <!-- Project Grid -->
+                <div id="grid" class="experience-grid project-grid hide"></div>
             </div>
         </section>
     </main>
+
+    <script>
+        // Konfigurasi
+        const BASE_PROJECTS_ENDPOINT = "{% url 'main:get_projects_json' %}";
+        const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+        let projectsAbortController;
+
+        // Elemen DOM
+        const loadingState = document.getElementById('loading');
+        const errorState = document.getElementById('error');
+        const emptyState = document.getElementById('empty');
+        const gridContainer = document.getElementById('grid');
+        const searchForm = document.getElementById('project-search-form');
+        const searchInput = document.getElementById('search-input');
+
+        // Tampilkan/sembunyikan bagian halaman
+        function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
+            loadingState.classList.toggle('hide', !showLoading);
+            errorState.classList.toggle('hide', !showError);
+            emptyState.classList.toggle('hide', !showEmpty);
+            gridContainer.classList.toggle('hide', !showGrid);
+        }
+
+        // Bangun elemen kartu proyek
+        function buildProjectCardElement(item) {
+            const project = item.fields;
+            const projectId = item.pk;
+
+            const articleElement = document.createElement('article');
+            articleElement.className = 'experience-card';
+
+            const imageHtml = project.thumbnail
+                ? `<img src="${project.thumbnail}" alt="Gambar ${project.title}" class="project-image">`
+                : '';
+
+            const urlHtml = project.link
+                ? `<a href="${project.link}" class="button" target="_blank" rel="noopener noreferrer">View Project</a>`
+                : '';
+
+            const techTagsHtml = project.tech_stack
+                .split(',')
+                .map(tech => tech.trim())
+                .filter(tech => tech)
+                .map(tech => `<span class="skill-tag">${tech}</span>`)
+                .join('');
+
+            // UUID dummy sebagai placeholder yang diganti dengan ID asli dari data JSON
+            const deleteUrl = "{% url 'main:delete_project' '00000000-0000-0000-0000-000000000000' %}"
+                .replace('00000000-0000-0000-0000-000000000000', projectId);
+            const starUrl = "{% url 'main:toggle_star' '00000000-0000-0000-0000-000000000000' %}"
+                .replace('00000000-0000-0000-0000-000000000000', projectId);
+
+            const deleteHtml = IS_SUPERUSER
+                ? `<form method="post" action="${deleteUrl}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="button button-danger" onclick="return confirm('Yakin ingin menghapus proyek ini?');">Hapus Proyek</button>
+                   </form>`
+                : '';
+
+            const isStarredClass = project.is_starred ? " is-starred" : "";
+            const starText = project.is_starred ? "Unstar" : "Star";
+            const starTitle = project.star_count > 0
+                ? `Di-star oleh ${project.starred_by_names}`
+                : "Jadilah yang pertama memberi star";
+
+            articleElement.innerHTML = `
+                ${imageHtml}
+                <h2>${project.title}</h2>
+                <p class="project-description">${project.description}</p>
+                <div class="project-tech-tags">${techTagsHtml}</div>
+                <div class="project-card-actions">
+                    <div class="project-actions">
+                        ${urlHtml}
+                        <form method="post" action="${starUrl}" class="star-form">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="button button-star${isStarredClass}"
+                                    title="${starTitle}">
+                                <span aria-hidden="true">&#9733;</span>
+                                ${starText}
+                                <span class="star-count">${project.star_count}</span>
+                            </button>
+                        </form>
+                        ${deleteHtml}
+                    </div>
+                </div>
+            `;
+            return articleElement;
+        }
+
+        // Ambil data proyek
+        async function fetchProjects(searchQuery = "") {
+            if (projectsAbortController) projectsAbortController.abort();
+            projectsAbortController = new AbortController();
+
+            try {
+                displayPageSection({ showLoading: true });
+
+                const url = searchQuery
+                    ? `${BASE_PROJECTS_ENDPOINT}?title=${encodeURIComponent(searchQuery)}`
+                    : BASE_PROJECTS_ENDPOINT;
+
+                const response = await fetch(url, {
+                    headers: { 'Accept': 'application/json' },
+                    signal: projectsAbortController.signal,
+                });
+
+                if (!response.ok) throw new Error('Gagal mengambil data');
+
+                const projectData = await response.json();
+
+                if (projectData.length === 0) {
+                    displayPageSection({ showEmpty: true });
+                } else {
+                    gridContainer.innerHTML = '';
+                    projectData.forEach(item => {
+                        gridContainer.appendChild(buildProjectCardElement(item));
+                    });
+                    displayPageSection({ showGrid: true });
+                }
+            } catch (error) {
+                if (error.name === 'AbortError') return;
+                console.error('Error loading projects:', error);
+                displayPageSection({ showError: true });
+            }
+        }
+
+        // Event handler form pencarian
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Cegah reload halaman
+            fetchProjects(searchInput.value.trim());
+        });
+
+        // Mulai aplikasi
+        fetchProjects(searchInput.value.trim());
+    </script>
 {% endblock content %}
