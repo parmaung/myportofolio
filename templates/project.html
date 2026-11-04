@@ -82,6 +82,16 @@
             gridContainer.classList.toggle('hide', !showGrid);
         }
 
+        // Ubah karakter HTML khusus menjadi entity supaya tampil sebagai teks
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+        }
+
         // Bangun elemen kartu proyek
         function buildProjectCardElement(item) {
             const project = item.fields;
@@ -91,18 +101,18 @@
             articleElement.className = 'experience-card';
 
             const imageHtml = project.thumbnail
-                ? `<img src="${project.thumbnail}" alt="Gambar ${project.title}" class="project-image">`
+                ? `<img src="${escapeHtml(project.thumbnail)}" alt="Gambar ${escapeHtml(project.title)}" class="project-image">`
                 : '';
 
             const urlHtml = project.link
-                ? `<a href="${project.link}" class="button" target="_blank" rel="noopener noreferrer">View Project</a>`
+                ? `<a href="${escapeHtml(project.link)}" class="button" target="_blank" rel="noopener noreferrer">View Project</a>`
                 : '';
 
             const techTagsHtml = project.tech_stack
                 .split(',')
                 .map(tech => tech.trim())
                 .filter(tech => tech)
-                .map(tech => `<span class="skill-tag">${tech}</span>`)
+                .map(tech => `<span class="skill-tag">${escapeHtml(tech)}</span>`)
                 .join('');
 
             // UUID dummy sebagai placeholder yang diganti dengan ID asli dari data JSON
@@ -121,13 +131,13 @@
             const isStarredClass = project.is_starred ? " is-starred" : "";
             const starText = project.is_starred ? "Unstar" : "Star";
             const starTitle = project.star_count > 0
-                ? `Di-star oleh ${project.starred_by_names}`
+                ? `Di-star oleh ${escapeHtml(project.starred_by_names)}`
                 : "Jadilah yang pertama memberi star";
 
             articleElement.innerHTML = `
                 ${imageHtml}
-                <h2>${project.title}</h2>
-                <p class="project-description">${project.description}</p>
+                <h2>${escapeHtml(project.title)}</h2>
+                <p class="project-description">${escapeHtml(project.description)}</p>
                 <div class="project-tech-tags">${techTagsHtml}</div>
                 <div class="project-card-actions">
                     <div class="project-actions">
