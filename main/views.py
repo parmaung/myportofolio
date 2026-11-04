@@ -8,6 +8,7 @@ from django.core import serializers
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from main.forms import EducationForm, ProjectForm, SkillsForm
 from main.models import Education, Experience, Project, Skills
@@ -94,6 +95,26 @@ def create_project(request):
         "form": form,
     }
     return render(request, "projects_form.html", context)
+
+
+@require_POST
+def create_project_ajax(request):
+    # Tidak memakai @login_required karena redirect ke halaman login tidak bisa dibaca fetch
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambah proyek."},
+            status=403,
+        )
+
+    form = ProjectForm(request.POST)
+    if form.is_valid():
+        project = form.save()
+        return JsonResponse(
+            {"message": "Proyek berhasil ditambahkan.", "pk": str(project.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
 
 @login_required(login_url="/login/")

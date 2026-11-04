@@ -208,6 +208,63 @@
             document.getElementById("add-project-modal").hidePopover();
         }
 
+        const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}";
+        const projectForm = document.getElementById('project-form');
+
+        // Baca nilai cookie, dipakai untuk mengambil CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Kirim data form ke server
+        async function addProject(event) {
+            event.preventDefault();
+
+            const submitButton = projectForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+
+            try {
+                const response = await fetch(CREATE_PROJECT_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                    body: new FormData(projectForm),
+                });
+                const result = await response.json().catch(() => ({}));
+
+                if (response.ok) {
+                    projectForm.reset();
+                    closeProjectModal();
+                    showToast('Berhasil', 'Proyek baru berhasil ditambahkan!', 'success');
+                    fetchProjects(searchInput.value.trim());
+                } else {
+                    const errorMessages = result.errors
+                        ? Object.values(result.errors).flat().map(error => error.message)
+                        : [result.message || `Terjadi kesalahan (status ${response.status}).`];
+                    showToast('Gagal menambah proyek', errorMessages.join(' '), 'error');
+                }
+            } catch (error) {
+                console.error('Error adding project:', error);
+                showToast('Gagal menambah proyek', 'Tidak dapat menghubungi server. Silakan coba lagi.', 'error');
+            } finally {
+                submitButton.disabled = false;
+            }
+        }
+
+        if (projectForm) {
+            projectForm.addEventListener('submit', addProject);
+        }
+
         // Mulai aplikasi
         fetchProjects(searchInput.value.trim());
     </script>
