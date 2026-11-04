@@ -65,6 +65,8 @@
         const gridContainer = document.getElementById('grid');
         const searchForm = document.getElementById('project-search-form');
         const searchInput = document.getElementById('search-input');
+        const SEARCH_DEBOUNCE_DELAY = 300;
+        let searchDebounceTimer;
 
         // Tampilkan/sembunyikan bagian halaman
         function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
@@ -178,10 +180,22 @@
             }
         }
 
-        // Event handler form pencarian
-        searchForm.addEventListener('submit', function(e) {
-            e.preventDefault(); // Cegah reload halaman
+        function searchProjects() {
             fetchProjects(searchInput.value.trim());
+        }
+
+        // Cari otomatis setelah user berhenti mengetik
+        searchInput.addEventListener("input", function() {
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(function() {
+                searchProjects();
+            }, SEARCH_DEBOUNCE_DELAY);
+        });
+
+        searchForm.addEventListener("submit", function(event) {
+            event.preventDefault(); // Cegah reload halaman
+            clearTimeout(searchDebounceTimer);
+            searchProjects();
         });
 
         // Mulai aplikasi
