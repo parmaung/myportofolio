@@ -86,7 +86,7 @@ class ProjectTest(TestCase):
 
         self.assertContains(response, 'id="grid"')
         self.assertContains(response, 'id="empty"')
-        self.assertContains(response, reverse("main:get_projects_json"))
+        self.assertContains(response, reverse("api:project-list"))
 
     def test_project_data_appears_in_json_response(self):
         response = self.client.get(reverse("main:get_projects_json"))
