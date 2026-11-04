@@ -73,6 +73,7 @@ def show_projects(request):
     context = {
         "name": PORTFOLIO_OWNER_NAME,
         "title_query": title_query,
+        "form": ProjectForm(),
     }
     return render(request, "project.html", context)
 
