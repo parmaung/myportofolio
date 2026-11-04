@@ -65,6 +65,12 @@ h1, .brand {
     text-decoration: none;
 }
 
+.site-header nav .nav-user {
+    margin-left: 1rem;
+    color: #f3c9a6;
+    font-weight: 700;
+}
+
 .hero {
     padding: 4.5rem 0 5rem;
 }
@@ -429,6 +435,16 @@ h1, .brand {
 .form-group textarea:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
+}
+
+.form-help {
+    margin-top: 0.35rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.form-help ul {
+    padding-left: 1.1rem;
 }
 
 .form-error {
