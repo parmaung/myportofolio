@@ -174,6 +174,18 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                           builder: (context) {
                             return AlertDialog(
                               title: const Text('Project added successfully!'),
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Project Name: $_projectName'),
+                                    Text('Description: $_description'),
+                                    Text('Category: $_category'),
+                                    Text('Technologies: $_technologies'),
+                                    Text('Link: $_projectLink'),
+                                  ],
+                                ),
+                              ),
                               actions: [
                                 TextButton(
                                   child: const Text('OK'),
