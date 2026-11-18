@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:myportofolio_mobile/project_form.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
+import 'package:myportofolio_mobile/widgets/project_card.dart';
 
 class ItemHomepage {
   final String name;
@@ -104,60 +104,6 @@ class InfoCard extends StatelessWidget {
             const SizedBox(height: 8.0),
             Text(content, textAlign: TextAlign.center),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class ItemCard extends StatelessWidget {
-  final ItemHomepage item;
-
-  const ItemCard(this.item, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Theme.of(context).colorScheme.secondary,
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        // Menangani tap pada kartu
-        onTap: () {
-          // Menampilkan SnackBar ketika kartu ditekan
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text("You pressed the ${item.name} button!"),
-              ),
-            );
-
-          // Navigasi ke halaman yang sesuai
-          if (item.name == "Add Project") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ProjectFormPage(),
-              ),
-            );
-          }
-        },
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(item.icon, color: Colors.white, size: 30.0),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );
