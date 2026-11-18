@@ -1,0 +1,16 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+*.iml
+.idea/
+local.properties
+
+# .gitignore root (Django) mengabaikan lib/ dan build/, lib Flutter harus dilacak
+!lib/
+!/lib/**
