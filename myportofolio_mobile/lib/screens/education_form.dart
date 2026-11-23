@@ -150,6 +150,64 @@ class _EducationFormPageState extends State<EducationFormPage> {
     return null;
   }
 
+  /// Dipanggil saat tombol Save ditekan. Semua validator dijalankan lewat
+  /// [FormState.validate]; dialog ringkasan hanya muncul jika semuanya lolos.
+  void _onSave() {
+    FocusScope.of(context).unfocus();
+    if (!_formKey.currentState!.validate()) return;
+
+    String orDash(String value) => value.trim().isEmpty ? '-' : value.trim();
+
+    final entries = <String, String>{
+      'Institution': _institutionController.text.trim(),
+      'Level': _levels[_level]!,
+      'Field of Study': orDash(_fieldOfStudyController.text),
+      'GPA': orDash(_gpaController.text),
+      'Start Year': '$_startYear',
+      'End Year': _endYear == null ? 'Ongoing' : '$_endYear',
+      'Description': orDash(_descriptionController.text),
+    };
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Education saved!'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: entries.entries
+                  .map((entry) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '${entry.key}: ',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextSpan(text: entry.value),
+                            ],
+                          ),
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -294,6 +352,21 @@ class _EducationFormPageState extends State<EducationFormPage> {
                   minLines: 3,
                   maxLines: 5,
                   keyboardType: TextInputType.multiline,
+                ),
+                const SizedBox(height: 24.0),
+
+                // === Save Button ===
+                SizedBox(
+                  height: 48.0,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorScheme.primary,
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: _onSave,
+                    icon: const Icon(Icons.save),
+                    label: const Text('Save'),
+                  ),
                 ),
               ],
             ),
