@@ -19,6 +19,7 @@ class MyHomePage extends StatelessWidget {
   final List<ItemHomepage> items = [
     ItemHomepage('View Projects', Icons.folder),
     ItemHomepage('Add Project', Icons.add_circle),
+    ItemHomepage('Add Education', Icons.school),
     ItemHomepage('Logout', Icons.logout),
   ];
 
@@ -37,7 +38,9 @@ class MyHomePage extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       drawer: const LeftDrawer(),
-      body: Padding(
+      // SingleChildScrollView mencegah overflow saat jumlah action card
+      // bertambah atau layar terlalu pendek.
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +68,8 @@ class MyHomePage extends StatelessWidget {
                     ),
                   ),
                   GridView.count(
-                    primary: true,
+                    primary: false,
+                    physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.all(20),
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
