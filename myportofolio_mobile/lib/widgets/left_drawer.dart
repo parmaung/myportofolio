@@ -40,13 +40,16 @@ class LeftDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.home_outlined),
             title: const Text('Home'),
-            // Navigasi ke halaman utama portofolio
+            // Navigasi ke halaman utama portofolio. Semua route lama dihapus
+            // agar home menjadi satu-satunya halaman di stack dan tidak ada
+            // halaman home ganda saat form dibuka lewat action card.
             onTap: () {
-              Navigator.pushReplacement(
+              Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
                   builder: (context) => MyHomePage(),
                 ),
+                (route) => false,
               );
             },
           ),
