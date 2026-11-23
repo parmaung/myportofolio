@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:myportofolio_mobile/screens/education_form.dart';
 import 'package:myportofolio_mobile/screens/menu.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
 
@@ -24,12 +25,20 @@ class ItemCard extends StatelessWidget {
               ),
             );
 
-          // Navigasi ke halaman yang sesuai
+          // Navigasi ke halaman yang sesuai. Navigator.push menumpuk
+          // halaman form di atas home sehingga tombol Back kembali ke home.
           if (item.name == "Add Project") {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => const ProjectFormPage(),
+              ),
+            );
+          } else if (item.name == "Add Education") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const EducationFormPage(),
               ),
             );
           }
