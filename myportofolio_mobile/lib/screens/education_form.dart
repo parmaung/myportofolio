@@ -73,7 +73,7 @@ class _EducationFormPageState extends State<EducationFormPage> {
 
   Future<void> _selectStartYear() async {
     final year = await _pickYear(_startYear);
-    if (year == null) return;
+    if (year == null || !mounted) return;
     setState(() {
       _startYear = year;
       _startYearController.text = '$year';
@@ -82,7 +82,7 @@ class _EducationFormPageState extends State<EducationFormPage> {
 
   Future<void> _selectEndYear() async {
     final year = await _pickYear(_endYear ?? _startYear);
-    if (year == null) return;
+    if (year == null || !mounted) return;
     setState(() {
       _endYear = year;
       _endYearController.text = '$year';
